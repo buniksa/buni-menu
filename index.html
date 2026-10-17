@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منيو Buni | بوني</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Noto+Kufi+Arabic:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7e9de; --surface:#fff6ef; --ink:#4a2f1f; --muted:#8a6a58; --line:#e8cfc0;
+  --pink:#c98f85; --on-pink:#4a2f1f; --accent:#a4574b; --focus:#4a2f1f;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#4a3020; --surface:#583a27; --ink:#f3dfcf; --muted:#cdb09d; --line:#6e4e3a; --pink:#d9a198; --on-pink:#3b271a; --accent:#e8b3a9; --focus:#f3dfcf;}
+}
+:root[data-theme="dark"]{--bg:#4a3020; --surface:#583a27; --ink:#f3dfcf; --muted:#cdb09d; --line:#6e4e3a; --pink:#d9a198; --on-pink:#3b271a; --accent:#e8b3a9; --focus:#f3dfcf;}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic","Tajawal",system-ui,sans-serif;line-height:1.6;padding-bottom:110px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{display:flex;align-items:center;gap:16px;padding:24px 20px 12px;max-width:640px;margin:0 auto}
+header img{width:84px;height:84px;border-radius:22px;flex:none}
+header p{margin:0;font-family:"Playfair Display","Noto Kufi Arabic",serif;font-size:1.35rem;color:var(--accent);line-height:1.4}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 20px;max-width:640px;margin:0 auto}
+.tab{flex:none;border:1.5px solid var(--pink);background:transparent;color:var(--ink);font:inherit;padding:6px 16px;border-radius:99px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--pink);color:var(--on-pink);font-weight:700}
+button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+main{max-width:640px;margin:0 auto;padding:0 20px}
+section h2{font-family:"Playfair Display","Noto Kufi Arabic",serif;font-size:1.5rem;margin:28px 0 4px;color:var(--accent)}
+.item{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px dashed var(--line)}
+.info{min-width:0}
+.name{font-weight:700;font-size:1.1rem}
+.desc{color:var(--muted);font-size:.92rem}
+.price{color:var(--accent);font-weight:700;margin-top:2px}
+.ctl{display:flex;align-items:center;gap:8px;flex:none}
+.ctl button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:1.3rem;line-height:1;cursor:pointer}
+.ctl button.add{background:var(--pink);border-color:var(--pink);color:var(--on-pink)}
+.ctl .q{min-width:18px;text-align:center;font-weight:700}
+#bar{position:fixed;inset:auto 0 0 0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:11;pointer-events:none}
+#bar button{pointer-events:auto;display:flex;justify-content:space-between;width:100%;max-width:608px;margin:0 auto;background:var(--pink);color:var(--on-pink);border:0;border-radius:14px;padding:14px 18px;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#bar[hidden]{display:none}
+#sheet{position:fixed;inset:0;z-index:20;background:rgba(40,24,14,.55);display:none;align-items:flex-end}
+#sheet.open{display:flex}
+.panel{background:var(--surface);width:100%;max-width:640px;margin:0 auto;border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));max-height:80%;overflow:auto}
+.panel h3{font-family:"Playfair Display","Noto Kufi Arabic",serif;margin:0 0 8px;font-size:1.4rem;color:var(--accent)}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+.total{font-weight:700;font-size:1.2rem;margin:14px 0}
+.actions{display:flex;gap:10px}
+.actions button{flex:1;padding:12px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer;border:1.5px solid var(--accent);background:transparent;color:var(--accent)}
+.actions .go{background:var(--pink);border-color:var(--pink);color:var(--on-pink)}
+.done{text-align:center;padding:12px 0}
+#app[hidden]{display:none}
+.ico{width:54px;height:54px;flex:none;transition:transform .25s}
+.ico:hover{transform:rotate(-6deg) scale(1.06)}
+.ico svg,.hico svg{width:100%;height:100%;overflow:visible}
+.ico.pop{animation:pop2 .45s ease-out}
+section h2{display:flex;align-items:center;gap:10px}
+.hico{width:42px;height:42px;flex:none}
+.sp,.sp2{animation:spin 20s linear infinite}
+.sp{transform-origin:120px 120px}
+.sp2{transform-origin:32px 32px}
+.bob{animation:bob 3.2s ease-in-out infinite}
+.steam{opacity:0;animation:steam 2.2s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes steam{0%{opacity:0;transform:translateY(5px)}40%{opacity:.9}100%{opacity:0;transform:translateY(-9px)}}
+@keyframes pop2{40%{transform:scale(1.3) rotate(-8deg)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.sp,.sp2,.bob,.ico.pop{animation:none}.steam{animation:none;opacity:.7}}
+.enter section h2{--fx:0px;--r:0deg;animation:gather .6s cubic-bezier(.2,.9,.25,1.1) both}
+.enter .item{animation:gather .65s cubic-bezier(.2,.9,.25,1.1) both;animation-delay:calc(var(--i,0)*85ms)}
+.enter .item:nth-child(odd){--fx:70px;--r:10deg}
+.enter .item:nth-child(even){--fx:-70px;--r:-10deg}
+.enter .ico svg{animation:gico .8s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--i,0)*85ms + .15s)}
+.enter .ico svg path[stroke-linecap="round"]:not(.sp2){stroke-dasharray:60;animation:draw .9s ease-out both;animation-delay:calc(var(--i,0)*85ms + .55s)}
+#app:not([hidden]) header img{animation:drop .8s cubic-bezier(.3,1.4,.5,1) both}
+#app:not([hidden]) header p{animation:fade .8s .25s both}
+@keyframes gather{from{opacity:0;transform:translate(var(--fx,60px),34px) rotate(var(--r,10deg)) scale(.7)}to{opacity:1;transform:none}}
+@keyframes gico{from{transform:scale(0) rotate(-140deg)}to{transform:none}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+@keyframes drop{from{opacity:0;transform:translateY(-24px) scale(.6) rotate(-20deg)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.enter section h2,.enter .item,.enter .ico svg,.enter .ico svg path,#app header img,#app header p{animation:none!important}}
+body:not(.started),body:not(.started)::before{background:#583a27}
+body.started #land{display:none}
+#land{position:relative;min-height:100vh;min-height:100dvh;background:#583a27;color:#f7e9de;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 28px;gap:10px;overflow:hidden}
+#land::before{content:"";position:absolute;inset:14px;border:1px solid #f7e9de;opacity:.35;pointer-events:none}
+#land>*{animation:fade .8s both}
+#land>:nth-child(2){animation-delay:.15s}#land>:nth-child(3){animation-delay:.3s}#land>:nth-child(4){animation-delay:.45s}#land>:nth-child(5){animation-delay:.6s}
+.wm{font-family:"Playfair Display","Noto Kufi Arabic",serif;font-weight:700;font-size:clamp(2.6rem,13vw,3.8rem);line-height:1.1;direction:ltr}
+.pair{display:flex;align-items:flex-end;justify-content:center;gap:4px;direction:ltr;margin:6px 0}
+.pair span{display:block}.pair .a{width:min(104px,28vw)}.pair .b{width:min(80px,22vw)}.lg{width:min(260px,70vw);height:auto}
+.pair svg{width:100%;height:auto;overflow:visible;animation:gico .9s cubic-bezier(.3,1.5,.5,1) .3s both}
+.scr{font-family:"Great Vibes",cursive;font-size:2.3rem;line-height:1.2;color:#e8b3a9;margin:0;direction:ltr}
+#start{margin-top:10px;background:#c98f85;color:#3b271a;border:0;border-radius:99px;padding:14px 46px;font:inherit;font-weight:700;font-size:1.1rem;cursor:pointer}
+#start:focus-visible{outline:3px solid #f7e9de;outline-offset:3px}
+#land>.hrt{color:#c98f85;font-size:1.3rem;animation:fade .8s .6s both,beat 1.6s 1.4s ease-in-out infinite}
+@keyframes beat{50%{transform:scale(1.25)}}
+header p{font-family:"Great Vibes",cursive;font-size:1.9rem;direction:ltr}
+@media (prefers-reduced-motion:reduce){#land>*,.pair svg,.hrt{animation:none!important}}
+.actions a{flex:1;padding:12px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer;border:1.5px solid var(--pink);text-align:center;text-decoration:none;background:var(--pink);color:var(--on-pink)}
+.note{background:var(--bg);border:1px dashed var(--pink);border-radius:12px;padding:10px 12px;margin:0 0 14px;font-size:.92rem;line-height:1.7}
+.pay{background:var(--bg);border-radius:12px;padding:12px;margin:0 0 10px;font-size:.95rem;line-height:1.8}
+.pay .pt{font-weight:700;color:var(--accent)}
+.iban{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.iban span{font-weight:700;font-size:.9rem;word-break:break-all;direction:ltr;text-align:left}
+.iban button{flex:none;border:1.5px solid var(--accent);background:transparent;color:var(--accent);border-radius:99px;padding:4px 14px;font:inherit;cursor:pointer}
+.dlv{margin:0 0 10px}
+.dlv .pt{font-weight:700;color:var(--accent);margin-bottom:6px}
+.opts{display:flex;gap:8px;margin-bottom:8px}
+.opt{flex:1;padding:9px 8px;border-radius:12px;border:1.5px solid var(--pink);background:transparent;color:var(--ink);font:inherit;font-size:.92rem;cursor:pointer}
+.opt[aria-pressed="true"]{background:var(--pink);color:var(--on-pink);font-weight:700}
+#addr{width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin-bottom:6px}
+.err{color:var(--accent);font-size:.9rem}
+.opts{flex-wrap:wrap}
+.opt{flex:1 1 30%}
+header .hl{width:84px;height:84px;flex:none}
+#app:not([hidden]) header .hl{animation:drop .8s cubic-bezier(.3,1.4,.5,1) both}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="bl" viewBox="406 253 624 470"><path d="M 477.585938 655.949219 L 521.335938 655.949219 C 553.332031 655.949219 576.824219 649.675781 591.816406 637.113281 C 607.613281 623.550781 615.511719 606.332031 615.511719 585.46875 C 615.511719 565.21875 607.914062 548.207031 592.726562 534.433594 C 577.941406 520.867188 551.507812 514.078125 513.4375 514.078125 L 477.585938 514.078125 Z M 477.585938 454.839844 L 499.765625 454.839844 C 526.089844 454.839844 545.382812 449.019531 557.636719 437.371094 C 569.890625 425.726562 576.019531 408.5625 576.019531 385.875 C 576.019531 363.804688 569.734375 347.042969 557.179688 335.597656 C 544.621094 324.160156 526.394531 318.433594 502.5 318.433594 L 477.585938 318.433594 Z M 406.804688 722.480469 L 406.804688 253.421875 L 477.28125 253.421875 C 508.675781 253.421875 533.683594 255.855469 552.320312 260.714844 C 571.15625 265.574219 587.054688 273.777344 600.015625 285.320312 C 613.179688 297.273438 623.609375 312.160156 631.308594 329.976562 C 639.207031 348.007812 643.15625 366.234375 643.15625 384.660156 C 643.15625 418.28125 630.292969 446.742188 604.574219 470.027344 C 629.484375 478.535156 649.125 493.417969 663.511719 514.6875 C 678.09375 535.753906 685.382812 560.253906 685.382812 588.203125 C 685.382812 624.863281 672.421875 655.847656 646.496094 681.164062 C 630.898438 696.761719 613.382812 707.59375 593.941406 713.671875 C 572.671875 719.546875 546.039062 722.480469 514.042969 722.480469 Z M 406.804688 722.480469 " fill="currentColor"/><path d="M 968.859375 527.5 C 968.730469 476.730469 968.601562 425.960938 968.46875 375.1875 C 969.058594 331.179688 951.992188 308.945312 917.253906 308.480469 C 882.519531 308.015625 864.855469 329.785156 864.269531 373.792969 L 862.226562 526.28125 L 800.855469 525.460938 L 802.914062 371.609375 C 803.199219 350.332031 806.082031 332 811.5625 316.617188 C 816.839844 302.863281 825.824219 290.519531 838.519531 279.597656 C 859.492188 261.871094 885.984375 253.222656 917.984375 253.652344 C 949.8125 254.078125 975.96875 263.429688 996.457031 281.710938 C 1009.042969 292.972656 1017.875 305.550781 1022.960938 319.445312 C 1027.890625 331.878906 1030.191406 350.277344 1029.863281 374.648438 C 1029.875 425.65625 1029.886719 476.664062 1029.894531 527.675781 C 1009.550781 527.617188 989.203125 527.558594 968.859375 527.5 " fill="currentColor"/><path d="M 775.382812 433.707031 L 773.230469 594.511719 C 772.609375 640.921875 790.613281 664.371094 827.246094 664.859375 C 863.871094 665.351562 882.5 642.394531 883.121094 595.984375 L 885.273438 435.175781 L 949.996094 436.042969 L 947.824219 598.289062 C 947.523438 620.722656 944.480469 640.058594 938.703125 656.28125 C 933.136719 670.785156 923.664062 683.800781 910.273438 695.320312 C 888.160156 714.011719 860.222656 723.132812 826.472656 722.679688 C 792.90625 722.230469 765.324219 712.367188 743.71875 693.089844 C 730.449219 681.214844 721.132812 667.949219 715.765625 653.296875 C 710.570312 640.1875 708.144531 620.785156 708.488281 595.085938 L 710.660156 432.839844 Z M 775.382812 433.707031 " fill="currentColor"/><path d="M 743.234375 352.375 C 745.027344 342.96875 752.445312 336.167969 760.789062 335.667969 C 767.3125 335.277344 773.476562 338.824219 776.777344 343.789062 C 780.636719 349.589844 781.46875 357.910156 776.289062 366.789062 C 768.964844 379.34375 754.585938 389.015625 743.34375 397.800781 C 733.628906 390.460938 722.589844 382.457031 715.03125 372.859375 C 709.089844 365.320312 704.351562 356.71875 708.21875 346.921875 C 715.152344 329.34375 742.058594 333.238281 743.234375 352.375 " fill="#c98f85"/><path d="M 1029.894531 370.765625 L 968.46875 370.765625 C 968.550781 423.070312 968.628906 475.371094 968.707031 527.675781 L 1029.894531 527.675781 Z M 1029.894531 370.765625 " fill="#c98f85"/></symbol></svg>
+<div id="land">
+<svg class="lg" viewBox="0 0 624 470" role="img" aria-label="شعار Buni" style="color:#e8cbb6"><use href="#bl" width="624" height="470"/></svg>
+<div class="pair" id="pair"></div>
+<p class="scr">More than just a roll</p>
+<button id="start">ابدأ الطلب</button>
+<div class="hrt" aria-hidden="true">&#9829;</div>
+</div>
+<div id="app" hidden>
+<header>
+  <svg class="hl" viewBox="0 0 100 100" role="img" aria-label="شعار Buni" style="color:#e8cbb6"><rect width="100" height="100" rx="22" fill="#583a27"/><use href="#bl" x="12" y="21" width="76" height="57.300"/></svg>
+  <p>More than just a roll</p>
+</header>
+<nav><div class="tabs" id="tabs"></div></nav>
+<main id="menu"></main>
+</div>
+<div id="bar" hidden><button id="open"><span id="cnt"></span><span id="sum"></span></button></div>
+<div id="sheet"><div class="panel" id="panel"></div></div>
+<script>
+var DATA=[
+ {id:"roll",t:"سينابون",items:[
+  ["حبة سينابون","1 Cinnamon Roll",6],
+  ["3 حبات سينابون","3 Cinnamon Rolls",18],
+  ["9 حبات سينابون","9 Cinnamon Rolls",45],
+  ["16 حبة سينابون","16 Cinnamon Rolls",66],
+  ["إكسترا صوص","Extra Sauce",3]]},
+ {id:"car",t:"سينابون مكرمل",items:[
+  ["حبة سينابون مكرمل","1 Caramel Cinnamon Roll",7],
+  ["3 حبات سينابون مكرمل","3 Caramel Cinnamon Rolls",21],
+  ["9 حبات سينابون مكرمل","9 Caramel Cinnamon Rolls",54],
+  ["16 حبة سينابون مكرمل","16 Caramel Cinnamon Rolls",82]]},
+ {id:"cof",t:"القهوة الحارة",items:[
+  ["قهوة اليوم - حار","Brewed Coffee (Hot)",6],
+  ["V60 - حار","V60 (Hot)",9]]},
+ {id:"cold",t:"القهوة الباردة",items:[
+  ["قهوة اليوم - بارد","Iced Brewed Coffee",6],
+  ["V60 - بارد","Iced V60",9]]}
+];
+var qty={},cur="all";
+var $=function(i){return document.getElementById(i)};
+function key(c,i){return c+"-"+i}
+function fmt(n){return n+" ريال"}
+function icon(c,n){
+  var s='<svg viewBox="0 0 64 64" aria-hidden="true">';
+  if(c==="cof"){
+    s+='<g class="bob"><ellipse cx="32" cy="62" rx="19" ry="2.500" fill="#c98f85" opacity=".5"/><path d="M12 22h40l-5 37a3 3 0 0 1-3 3H20a3 3 0 0 1-3-3z" fill="#e8cbb6" stroke="#c98f85" stroke-width="1.500" stroke-linejoin="round"/><use href="#bl" x="18" y="31" width="28" height="21.100" style="color:#4f3323"/><rect x="9" y="16" width="46" height="7" rx="3.500" fill="#fff6ef" fill-opacity=".3" stroke="#c98f85" stroke-width="1.500"/></g><g fill="none" stroke="#c98f85" stroke-width="3" stroke-linecap="round"><path class="steam" style="animation-delay:0s" d="M23 12q-3-3 0-7"/><path class="steam" style="animation-delay:.6s" d="M32 12q-3-3 0-7"/><path class="steam" style="animation-delay:1.2s" d="M41 12q-3-3 0-7"/></g>';
+  }else if(c==="cold"){
+    s+='<g class="bob"><ellipse cx="32" cy="62" rx="19" ry="2.500" fill="#c98f85" opacity=".5"/><path d="M12 18h40l-4.500 41a3 3 0 0 1-3 3h-25a3 3 0 0 1-3-3z" fill="#fff6ef" fill-opacity=".25" stroke="#c98f85" stroke-width="1.800" stroke-linejoin="round"/><path d="M12.400 22h39.200l-4 36.300a2 2 0 0 1-2 1.700H18.400a2 2 0 0 1-2-1.700z" fill="#7a4a2e"/><path d="M39 3L34 24" fill="none" stroke="#c98f85" stroke-width="3.500" stroke-linecap="round"/><rect x="20" y="23" width="9" height="9" rx="2.500" transform="rotate(-12 24.500 27.500)" fill="#fff6ef" fill-opacity=".85"/><rect x="32" y="24" width="9" height="9" rx="2.500" transform="rotate(10 36.500 28.500)" fill="#fff6ef" fill-opacity=".85"/><path d="M13.800 31h36.400l-3 21H16.800z" fill="#e8cbb6"/><use href="#bl" x="19.500" y="32.500" width="25" height="18.800" style="color:#4f3323"/><rect x="9.500" y="13.500" width="45" height="5.500" rx="2.700" fill="#c98f85"/></g>';
+  }else if(n.indexOf("إكسترا")>-1){
+    s+='<g class="bob"><path d="M14 56c1-5 6-6 10-4 3-4 10-4 13-1 5-2 11 0 11 4 0 4-5 5-9 5H22c-6 0-9-1-8-4z" fill="#c27a2c"/><g transform="rotate(-12 32 26)"><path d="M21 8h22v6H21z" fill="#9b5f38"/><path d="M21 14h22v28H21z" fill="#c98f85" stroke="#9b5f38" stroke-width="2.500" stroke-linejoin="round"/><path d="M21 42h22v6H21z" fill="#9b5f38"/><path d="M32 36c-4-3-6-5-6-7.500a3 3 0 0 1 6-1 3 3 0 0 1 6 1c0 2.500-2 4.500-6 7.500z" fill="#fff6ef"/><path d="M24 11h16M24 45h16" stroke="#f7e9de" stroke-width="1.500" stroke-dasharray="2 2.500"/></g></g>';
+  }else{
+    var g=c==="car"?"#c27a2c":"#fff6ef";
+    s+='<g class="bob"><circle cx="32" cy="32" r="26" fill="#d9a06e" stroke="#b9794a" stroke-width="2.5"/><path class="sp2" d="M32 32a3 3 0 0 1 6 0a6 6 0 0 1-12 0a9 9 0 0 1 18 0a12 12 0 0 1-24 0a15 15 0 0 1 30 0a18 18 0 0 1-36 0" fill="none" stroke="#9b5f38" stroke-width="3.500" stroke-linecap="round"/><path d="M16 25q5-5 10 0t10 0t10 0" fill="none" stroke="'+g+'" stroke-width="3.500" stroke-linecap="round"/><path d="M16 40q5-5 10 0t10 0t10 0" fill="none" stroke="'+g+'" stroke-width="3.500" stroke-linecap="round"/></g>';
+  }
+  return s+'</svg>';
+}
+function renderTabs(){
+  var h='<button class="tab" aria-pressed="'+(cur==="all")+'" data-t="all">الكل</button>';
+  DATA.forEach(function(c){h+='<button class="tab" aria-pressed="'+(cur===c.id)+'" data-t="'+c.id+'">'+c.t+'</button>'});
+  $("tabs").innerHTML=h;
+}
+function renderMenu(){
+  var h="",n=0;
+  DATA.forEach(function(c){
+    if(cur!=="all"&&cur!==c.id)return;
+    h+='<section><h2><span class="hico">'+icon(c.id,"")+'</span>'+c.t+'</h2>';
+    c.items.forEach(function(it,i){
+      var k=key(c.id,i),q=qty[k]||0;
+      h+='<div class="item" style="--i:'+(n++)+'"><div class="ico" data-k="'+k+'">'+icon(c.id,it[0])+'</div><div class="info"><div class="name">'+it[0]+'</div><div class="desc">'+it[1]+'</div><div class="price">'+fmt(it[2])+'</div></div><div class="ctl">'+
+      (q?'<button data-m="'+k+'" aria-label="إنقاص">−</button><span class="q">'+q+'</span>':'')+
+      '<button class="add" data-p="'+k+'" aria-label="إضافة '+it[0]+'">+</button></div></div>';
+    });
+    h+='</section>';
+  });
+  $("menu").innerHTML=h;
+}
+function lines(){
+  var out=[];
+  DATA.forEach(function(c){c.items.forEach(function(it,i){var q=qty[key(c.id,i)]||0;if(q)out.push({n:it[0],q:q,p:it[2]})})});
+  return out;
+}
+function renderBar(){
+  var l=lines(),n=0,s=0;
+  l.forEach(function(x){n+=x.q;s+=x.q*x.p});
+  $("bar").hidden=!n;
+  $("cnt").textContent="عرض الطلب ("+n+")";
+  $("sum").textContent=fmt(s+fee());
+}
+function openSheet(){
+  var l=lines(),s=0,h='<h3>طلبك</h3>';
+  l.forEach(function(x){s+=x.q*x.p;h+='<div class="row"><span>'+x.q+' × '+x.n+'</span><span>'+fmt(x.q*x.p)+'</span></div>'});
+  if(ship.m==="del")h+='<div class="row"><span>التوصيل ('+ZN[ship.z]+')</span><span>'+fmt(fee())+'</span></div>';
+  h+='<div class="total">الإجمالي: '+fmt(s+fee())+'</div><div class="pay"><div class="pt">بيانات التحويل</div><div>اسم الحساب: الجوهره حلاف - الماضي</div><div>البنك: الراجحي</div><div>رقم الحساب: <span dir="ltr">208000010006086085987</span></div><div class="iban"><span>SA5580000208608016085987</span><button id="cp">نسخ الآيبان</button></div></div>'+dlv()+'<div class="note">ملاحظة: لا يتم اعتماد الطلب وتحضيره إلا بعد تحويل المبلغ، وإرسال صورة التحويل في الواتساب.</div><div class="actions"><button id="back">رجوع</button><a class="go" id="send" href="'+waLink()+'" target="_blank" rel="noopener">أرسل عبر واتساب</a></div>';
+  $("panel").innerHTML=h;$("sheet").classList.add("open");
+}
+var ship={m:"pick",z:"m",a:""};
+var ZN={m:"مروج ب والورود",o:"باقي الأحياء"};
+function fee(){return ship.m==="del"?(ship.z==="o"?20:15):0}
+function dlv(){var o=function(a,v,t,on){return '<button class="opt" '+a+'="'+v+'" aria-pressed="'+on+'">'+t+'</button>'};var h='<div class="dlv"><div class="pt">طريقة الاستلام</div><div class="opts">'+o("data-d","pick","استلام من المتجر (مجاناً)",ship.m==="pick")+o("data-d","del","توصيل",ship.m==="del")+'</div>';if(ship.m==="del")h+='<div class="opts">'+o("data-z","m","مروج ب والورود: 15 ريال",ship.z==="m")+o("data-z","o","باقي الأحياء: 20 ريال",ship.z==="o")+'</div><input id="addr" placeholder="اسم الحي والعنوان" value="'+ship.a.replace(/"/g,"&quot;")+'">';return h+'<div id="err" class="err"></div></div>'}
+document.addEventListener("input",function(e){if(e.target.id==="addr")ship.a=e.target.value});
+function closeSheet(){$("sheet").classList.remove("open")}
+var WA="966558196035";
+function waLink(){var l=lines(),s=0,p=["طلب جديد من Buni:"];l.forEach(function(x){s+=x.q*x.p;p.push("- "+x.q+" × "+x.n+" ("+fmt(x.q*x.p)+")")});p.push(ship.m==="del"?"التوصيل: "+ZN[ship.z]+" ("+fmt(fee())+") - العنوان: "+ship.a:"الاستلام: من المتجر");p.push("الإجمالي: "+fmt(s+fee()));p.push("ملاحظة: الطلب يُعتمد بعد التحويل، وسأرسل صورة التحويل هنا.");return "https://wa.me/"+WA+"?text="+p.map(encodeURIComponent).join("%0A")}
+function sent(){var k=waLink();qty={};refresh();$("panel").innerHTML='<div class="done"><h3>تم تجهيز طلبك</h3><p>أكمل الإرسال من واتساب، ولا يُعتمد طلبك إلا بعد تحويل المبلغ وإرسال صورة التحويل. إذا ما انفتح واتساب، اضغط الزر.</p><div class="actions"><a class="go" href="'+k+'" target="_blank" rel="noopener">فتح واتساب</a><button id="back">إغلاق</button></div></div>'}
+function enter(){var m=$("menu");m.classList.remove("enter");void m.offsetWidth;m.classList.add("enter")}
+function refresh(){$("menu").classList.remove("enter");renderMenu();renderBar()}
+document.addEventListener("click",function(e){
+  var sa=e.target.closest("#send");if(sa){if(ship.m==="del"&&!ship.a.trim()){e.preventDefault();var er=$("err");if(er)er.textContent="اكتب اسم الحي والعنوان للتوصيل.";return}sa.href=waLink();setTimeout(sent,50);return}
+  var b=e.target.closest("button,#sheet");if(!b)return;
+  if(b.id==="start"){document.body.classList.add("started");$("app").hidden=false;window.scrollTo(0,0);enter();return}
+  if(b.id==="sheet"){if(e.target===b)closeSheet();return}
+  if(b.dataset.t){cur=b.dataset.t;renderTabs();renderMenu();enter();return}
+  if(b.dataset.p){qty[b.dataset.p]=(qty[b.dataset.p]||0)+1;refresh();var ic=document.querySelector('.ico[data-k="'+b.dataset.p+'"]');if(ic)ic.classList.add("pop");return}
+  if(b.dataset.m){qty[b.dataset.m]=Math.max(0,(qty[b.dataset.m]||0)-1);refresh();return}
+  if(b.dataset.d){ship.m=b.dataset.d;renderBar();openSheet();return}
+  if(b.dataset.z){ship.z=b.dataset.z;renderBar();openSheet();return}
+  if(b.id==="cp"){var t="SA5580000208608016085987",dn=function(){b.textContent="تم النسخ"},fb=function(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");dn()}catch(x){}document.body.removeChild(a)};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(dn,fb)}else{fb()}return}
+  if(b.id==="open"){openSheet();return}
+  if(b.id==="back"){closeSheet();return}
+  if(b.id==="send"){qty={};refresh();$("panel").innerHTML='<div class="done"><h3>تم استلام طلبك</h3><p>نجهّز أصنافك الآن.</p><div class="actions"><button class="go" id="back">حسناً</button></div></div>'}
+});
+$("pair").innerHTML='<span class="a">'+icon("roll","")+'</span><span class="b">'+icon("cof","")+'</span>';
+renderTabs();refresh();
+</script>
+</body>
+</html>
